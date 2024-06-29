@@ -90,6 +90,12 @@ function UserList() {
 		return usersToFilter;
 	}, [users, selectedCity, highlightOldest]);
 
+	const paginationUsers = useMemo(() => {
+		const start = (currentPage - 1) * 10;
+		const end = start + 10;
+		return filteredUsers.slice(start, end);
+	}, [filteredUsers, currentPage]);
+
 	const columns = [
 		{
 			title: 'Name',
@@ -172,7 +178,7 @@ function UserList() {
 				className="user-table"
 				pagination={{ position: ['none', 'none'] }}
 				columns={columns}
-				dataSource={filteredUsers}
+				dataSource={selectedCity ? paginationUsers : filteredUsers}
 				loading={isLoading}
 				rowClassName={(record) =>
 					record.isOldest ? 'highlight-row' : ''
@@ -182,7 +188,7 @@ function UserList() {
 				className="pagination"
 				showSizeChanger={false}
 				current={currentPage}
-				total={totalUsers}
+				total={selectedCity ? filteredUsers.length : totalUsers}
 				onChange={handleOnPageChange}
 			/>
 		</Card>
